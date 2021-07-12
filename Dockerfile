@@ -16,4 +16,8 @@ WORKDIR /app
 
 EXPOSE 8080
 
-CMD ./service.py --refresher --consumer --interface --env
+ENV INTERFACE_HOST=0.0.0.0
+ENV SMTP_USER=
+ENV SMTP_PASSWD=
+
+CMD ./service.py --create_db --refresher --consumer --interface --env
