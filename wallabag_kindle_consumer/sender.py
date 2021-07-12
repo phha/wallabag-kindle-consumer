@@ -38,8 +38,11 @@ class Sender:
         msg.attach(mobi)
 
         smtp = smtplib.SMTP(host=self.host, port=self.port)
-        smtp.starttls()
-        if self.user is not None:
+        try:
+            smtp.starttls()
+        except smtplib.SMTPNotSupportedError:
+            logger.info("SMTP server does not support STARTTLS, continuing without")
+        if self.user:
             smtp.login(self.user, self.passwd)
         smtp.sendmail(self.from_addr, [email], msg.as_string())
         smtp.quit()
