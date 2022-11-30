@@ -26,7 +26,8 @@ Tag = namedtuple('Tag', ['tag', 'format'])
 
 
 def make_tags(tag):
-    return (Tag(tag='{tag}'.format(tag=tag), format='mobi'),
+    return (Tag(tag='{tag}'.format(tag=tag), format='epub'),
+            Tag(tag='{tag}-epub'.format(tag=tag), format='epub'),
             Tag(tag='{tag}-mobi'.format(tag=tag), format='mobi'),
             Tag(tag='{tag}-pdf'.format(tag=tag), format='pdf'))
 
@@ -45,7 +46,7 @@ class Wallabag:
                   'password': passwd}
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(self._url('/oauth/v2/token'), params=params) as resp:
+            async with session.post(self._url('/oauth/v2/token'), json=params) as resp:
                 if resp.status != 200:
                     logger.warn("Cannot get token for user {user}", user=user.name)
                     return False
@@ -65,7 +66,7 @@ class Wallabag:
                   'username': user.name}
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(self._url('/oauth/v2/token'), params=params) as resp:
+            async with session.post(self._url('/oauth/v2/token'), json=params) as resp:
                 if resp.status != 200:
                     logger.warn("Cannot refresh token for user {user}", user=user.name)
                     return False
